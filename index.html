@@ -3,111 +3,131 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CyberJay | Joseph Kung'u</title>
+<title>Chat with CyberJay</title>
 <style>
-:root{--bg:#0b0f14;--card:#121820;--line:#1f2a37;--tx:#e6edf3;--mut:#8b98a7;--ac:#00ff9c;--onac:#04110b;--bub:#1f2a37}
-@media (prefers-color-scheme:light){:root{--bg:#f6f8fa;--card:#fff;--line:#d8dee4;--tx:#1f2328;--mut:#59636e;--ac:#0a7d4f;--onac:#fff;--bub:#e7ecf0}}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
-body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.6}
-a{color:inherit;text-decoration:none}
+:root{--bg:#0b0f14;--card:#121820;--line:#1f2a37;--tx:#e6edf3;--mut:#8b98a7;--ac:#00ff9c;--onac:#04110b;--bub:#1b2531}
+@media (prefers-color-scheme:light){:root{--bg:#eef2f6;--card:#fff;--line:#d8dee4;--tx:#1f2328;--mut:#59636e;--ac:#0a7d4f;--onac:#fff;--bub:#e9eef3}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px;padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
+button,input{font-family:inherit}
+.card{width:100%;max-width:460px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
 
-/* ---------- USERNAME GATE (first step) ---------- */
-#gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
-.gbox{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:32px 28px;text-align:center}
-.gbox .logo{font-size:22px}
-.gbox h1{font-size:22px;margin:16px 0 6px;font-weight:600}
-.gbox p{margin:0 0 20px;color:var(--mut);font-size:14px}
-.gbox input{width:100%;padding:12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:15px;margin-bottom:12px}
-.gbox button{width:100%;padding:12px;border:0;border-radius:8px;background:var(--ac);color:var(--onac);font-weight:600;font-size:15px;cursor:pointer}
-#gerr{display:block;min-height:18px;margin-top:10px;font-size:13px;color:#ff7b7b}
+/* STEP 1: username */
+#welcome{padding:40px 28px;text-align:center}
+.av{width:64px;height:64px;border-radius:50%;background:var(--ac);color:var(--onac);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;margin:0 auto 18px;font-family:ui-monospace,Menlo,monospace}
+#welcome h1{font-size:22px;margin:0 0 6px;font-weight:600}
+#welcome p{margin:0 0 22px;color:var(--mut);font-size:14px}
+#welcome input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:15px;margin-bottom:12px;outline:none}
+#welcome input:focus,.bar input:focus{border-color:var(--ac)}
+#welcome .go{width:100%;padding:13px;border:0;border-radius:10px;background:var(--ac);color:var(--onac);font-weight:600;font-size:15px;cursor:pointer}
+#werr{display:block;min-height:18px;margin-top:10px;font-size:13px;color:#ff7b7b}
 
-/* ---------- SITE ---------- */
-#site{display:none}
-nav{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 5vw;background:var(--bg);border-bottom:1px solid var(--line)}
-.logo{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600;color:var(--ac)}
-.links{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.links a{font-size:14px;color:var(--mut)}.links a:hover{color:var(--ac)}
-.user{display:flex;align-items:center;gap:8px;font-size:14px;padding:4px 6px 4px 12px;border:1px solid var(--line);border-radius:99px;background:var(--card)}
-.user #uname{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.user button{border:0;background:transparent;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:4px 8px;font-family:inherit}
-section{max-width:960px;margin:0 auto;padding:64px 5vw}
-section h1{font-size:clamp(32px,6vw,52px);line-height:1.1;margin:0 0 16px;font-weight:600}
-h2{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);font-family:ui-monospace,Menlo,monospace;margin:0 0 24px;font-weight:500}
-.hero p{max-width:560px;color:var(--mut);font-size:18px}
-.mono{font-family:ui-monospace,Menlo,monospace;color:var(--ac);font-size:14px;margin:0 0 12px}
-.btn{display:inline-block;margin:20px 12px 0 0;padding:11px 20px;border-radius:8px;border:1px solid var(--ac);font-weight:500;font-size:15px}
-.btn.p{background:var(--ac);color:var(--onac)}.btn.s{color:var(--ac)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
-.card h3{margin:0 0 6px;font-size:17px;font-weight:600}.card p{margin:0;color:var(--mut);font-size:14px}
-.tag{display:inline-block;margin-top:12px;font-size:12px;padding:3px 10px;border:1px solid var(--line);border-radius:99px;color:var(--mut)}
-footer{text-align:center;color:var(--mut);font-size:13px;padding:32px 5vw;border-top:1px solid var(--line)}
-
-/* ---------- CHAT ---------- */
-.box{max-width:480px;height:440px;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.box header{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:600;color:var(--ac)}
-#log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
-.m{max-width:80%;padding:8px 12px;border-radius:10px;font-size:14px;white-space:pre-wrap;word-wrap:break-word}
-.me{align-self:flex-end;background:var(--ac);color:var(--onac)}.them{align-self:flex-start;background:var(--bub)}
-.bar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
-.bar input{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:14px;min-width:0}
-.bar button{padding:10px 16px;border:0;border-radius:8px;background:var(--ac);color:var(--onac);font-weight:600;cursor:pointer}
-.note{color:var(--mut);font-size:13px;margin-top:12px;max-width:480px}
+/* STEP 2: services | chat | coming soon */
+#stage{display:none;width:100%;max-width:1040px;grid-template-columns:minmax(0,250px) minmax(0,460px) minmax(0,250px);gap:18px;justify-content:center;align-items:stretch}
+#room{display:flex;height:min(86vh,680px);flex-direction:column;max-width:none}
+.side{padding:18px 16px;display:flex;flex-direction:column;gap:10px;max-height:min(86vh,680px);overflow-y:auto}
+.side h2{margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);font-family:ui-monospace,Menlo,monospace;font-weight:500}
+.side .sub{margin:0 0 6px;font-size:12px;color:var(--mut)}
+.item{width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--tx);cursor:pointer}
+.item:hover{border-color:var(--ac)}
+.item b{display:block;font-size:14px;margin-bottom:2px}
+.item span{font-size:12px;color:var(--mut);line-height:1.4;display:block}
+.item em{display:inline-block;font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--onac);background:var(--ac);border-radius:99px;padding:2px 8px;margin-bottom:6px}
+.empty{font-size:13px;color:var(--mut);padding:8px 2px}
+@media (max-width:1020px){#stage{grid-template-columns:minmax(0,460px)}#room{order:1}#svc{order:2}#soon{order:3}.side{max-height:none}}
+.top{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.top .av{width:42px;height:42px;font-size:15px;margin:0;position:relative;flex:none}
+.top .av::after{content:"";position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;background:#2ecc71;border:2px solid var(--card)}
+.who{flex:1;min-width:0}
+.who b{display:block;font-size:15px}
+.who span{font-size:12px;color:var(--mut)}
+.back{display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--tx);font-size:13px;text-decoration:none;white-space:nowrap}
+.back:hover{border-color:var(--ac);color:var(--ac)}
+#log{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth}
+.day{align-self:center;font-size:11px;color:var(--mut);margin:2px 0 8px;text-transform:uppercase;letter-spacing:.08em}
+.row{display:flex;flex-direction:column;max-width:82%}
+.row.me{align-self:flex-end;align-items:flex-end}.row.them{align-self:flex-start;align-items:flex-start}
+.m{padding:9px 13px;font-size:14px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere}
+.me .m{background:var(--ac);color:var(--onac);border-radius:16px 16px 4px 16px}
+.them .m{background:var(--bub);border-radius:16px 16px 16px 4px}
+.ts{font-size:10px;color:var(--mut);margin:3px 4px 6px}
+.typing{display:flex;gap:4px;padding:12px 14px;background:var(--bub);border-radius:16px 16px 16px 4px;width:fit-content}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:b 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 10px}
+.chips button{padding:7px 13px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--tx);font-size:13px;cursor:pointer}
+.chips button:hover{border-color:var(--ac);color:var(--ac)}
+.bar{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.bar input{flex:1;min-width:0;padding:12px 16px;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:14px;outline:none}
+.send{width:42px;height:42px;flex:none;border:0;border-radius:50%;background:var(--ac);color:var(--onac);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.foot{display:flex;justify-content:space-between;padding:0 16px 12px;font-size:12px;color:var(--mut)}
+.foot button{border:0;background:transparent;color:var(--mut);font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
 </style>
 </head>
 <body>
 
-<!-- STEP 1: username gate -->
-<div id="gate">
-  <div class="gbox">
-    <div class="logo">CyberJay_</div>
-    <h1>Welcome</h1>
-    <p>Enter your name to view the site and chat with me.</p>
-    <input id="gname" maxlength="30" placeholder="Your name / company" autocomplete="off">
-    <button id="genter">Enter</button>
-    <span id="gerr"></span>
-  </div>
+<!-- STEP 1: username page -->
+<div class="card" id="welcome">
+  <div class="av">CJ</div>
+  <h1>Hi, who's this?</h1>
+  <p>Enter your name to start chatting with Joseph.</p>
+  <input id="wname" maxlength="30" placeholder="Your name / company" autocomplete="off">
+  <button class="go" id="wgo">Start chat</button>
+  <span id="werr"></span>
 </div>
 
-<!-- STEP 2: the website (shown after username) -->
-<div id="site">
-<nav>
-  <a class="logo" href="#top">CyberJay_</a>
-  <div class="links">
-    <a href="#services">Services</a>
-    <a href="#contact">Chat</a>
-    <div class="user"><span id="uname"></span><button id="change" type="button">Change</button></div>
+<!-- STEP 2: services | chat | coming soon -->
+<div id="stage">
+
+<aside class="card side" id="svc">
+  <h2>Services</h2>
+  <p class="sub">Tap one to ask about it in the chat.</p>
+  <div id="svcList"></div>
+</aside>
+
+<div class="card" id="room">
+  <div class="top">
+    <div class="av">CJ</div>
+    <div class="who"><b>CyberJay</b><span>Online · usually replies within a day</span></div>
+    <a class="back" id="back" href="/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Main site</a>
   </div>
-</nav>
-
-<section class="hero" id="top">
-<p class="mono">$ whoami</p>
-<h1>Joseph Kung'u<br>Network and security, built hands-on.</h1>
-<p>Final-year student in Nairobi working toward network systems administration and cybersecurity roles. I build labs, break them, and document what I learn.</p>
-<a class="btn p" href="#contact">Chat with me</a><a class="btn s" href="#services">Services</a>
-</section>
-
-<section id="services">
-<h2>Services</h2>
-<div class="card"><h3>Managed network services for Kenyan SMEs</h3><p>In development: network setup, monitoring, and basic security hardening for small businesses. Message me in the chat below to talk about what you need.</p><span class="tag">Coming soon</span></div>
-</section>
-
-<section id="contact">
-<h2>Chat</h2>
-<div class="box">
-<header>Chat with CyberJay</header>
-<div id="log"></div>
-<div class="bar"><input id="text" maxlength="1000" placeholder="Type a message..."><button id="send">Send</button></div>
+  <div id="log"></div>
+  <div class="chips" id="chips">
+    <button>Job opportunity</button><button>Collaboration</button><button>Network services for my business</button>
+  </div>
+  <div class="bar">
+    <input id="text" maxlength="1000" placeholder="Type a message..." autocomplete="off">
+    <button class="send" id="send" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg></button>
+  </div>
+  <div class="foot"><span id="note"></span><button id="change">Not you? Change name</button></div>
 </div>
-<p class="note" id="note"></p>
-<a class="btn s" id="back" href="/">&larr; Back to main site</a>
-</section>
 
-<footer>&copy; 2026 CyberJay NetLabs. Nairobi, Kenya.</footer>
+<aside class="card side" id="soon">
+  <h2>Coming soon</h2>
+  <p class="sub">What I'm working on next.</p>
+  <div id="soonList"></div>
+</aside>
+
 </div>
 
 <script>
-const API = null;        // set to '' or 'https://your-app.vercel.app' when your /api/send and /api/poll are deployed
+const API = null;        // set to '' or 'https://your-app.vercel.app' once /api/send and /api/poll are deployed
 const MAIN_SITE = '/';   // your main site address, e.g. 'https://yoursite.com'
+
+/* ---- EDIT THESE: left panel (services) and right panel (coming soon) ---- */
+const SERVICES = [
+  { t: 'Network setup', d: 'Routers, switches and Wi-Fi configured for small offices.' },
+  { t: 'Network security', d: 'Firewall setup and basic hardening for small businesses.' },
+  { t: 'Monitoring and support', d: 'Keeping your network healthy and fixing issues fast.' },
+  { t: 'Linux server setup', d: 'Ubuntu Server installation and administration.' }
+];
+const SOON = [
+  { tag: 'Soon', t: 'Managed network packages', d: 'Monitoring and support plans for Kenyan SMEs.' },
+  { tag: 'Next', t: 'Lab write-ups', d: 'Step-by-step notes from my enterprise network lab builds.' }
+];  // set SOON = [] to show "Nothing new right now"
+/* ------------------------------------------------------------------------ */
+
 const $ = id => document.getElementById(id);
 const demo = API === null;
 $('back').href = MAIN_SITE;
@@ -117,83 +137,118 @@ try { store = window.localStorage; store.getItem('x'); } catch (e) { store = nul
 const get = k => { try { return store && store.getItem(k); } catch (e) { return null; } };
 const set = (k, v) => { try { store && store.setItem(k, v); } catch (e) {} };
 const del = k => { try { store && store.removeItem(k); } catch (e) {} };
-
 const rand = () => Array.from(crypto.getRandomValues(new Uint8Array(6))).map(b => b.toString(16).padStart(2, '0')).join('');
-let sid = get('cj_sid'), name = get('cj_name');
-let seen = new Set(); try { seen = new Set(JSON.parse(get('cj_seen') || '[]')); } catch (e) {}
-let pollTimer = null;
 
-function add(t, cls) {
-  const d = document.createElement('div');
-  d.className = 'm ' + cls; d.textContent = t;
+let name = get('cj_name'), sid = get('cj_sid'), pollTimer = null;
+let seen = new Set(); try { seen = new Set(JSON.parse(get('cj_seen') || '[]')); } catch (e) {}
+let hist = []; try { hist = JSON.parse(get('cj_log') || '[]'); } catch (e) {}
+
+const time = ts => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+function draw(text, who, ts) {
+  const r = document.createElement('div'); r.className = 'row ' + who;
+  const m = document.createElement('div'); m.className = 'm'; m.textContent = text;
+  const t = document.createElement('div'); t.className = 'ts'; t.textContent = time(ts);
+  r.append(m, t); $('log').appendChild(r);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+function add(text, who) {
+  const ts = Date.now();
+  draw(text, who, ts);
+  hist.push({ text, who, ts }); set('cj_log', JSON.stringify(hist.slice(-100)));
+}
+function typing(on) {
+  const old = $('typ'); if (old) old.remove();
+  if (!on) return;
+  const d = document.createElement('div'); d.id = 'typ'; d.className = 'typing';
+  d.innerHTML = '<i></i><i></i><i></i>';
   $('log').appendChild(d); $('log').scrollTop = $('log').scrollHeight;
 }
 
-/* Step 2: show the website */
-function enterSite() {
-  $('gate').style.display = 'none';
-  $('site').style.display = 'block';
-  $('uname').textContent = name;
-  window.scrollTo(0, 0);
-  $('note').textContent = demo
-    ? 'Preview mode: replies are simulated. Set API in the script to connect your Telegram bot.'
-    : 'Messages go straight to my inbox. Only you and I can see this thread.';
-  add(`Hi ${name}, send a message and I'll reply here.`, 'them');
+function ask(title) {
+  $('text').value = "Hi, I'd like to know more about: " + title;
+  $('text').focus();
+}
+function renderSide(el, list) {
+  el.innerHTML = '';
+  if (!list.length) { const e = document.createElement('div'); e.className = 'empty'; e.textContent = 'Nothing new right now. Check back soon.'; el.appendChild(e); return; }
+  list.forEach(x => {
+    const b = document.createElement('button'); b.className = 'item'; b.type = 'button';
+    if (x.tag) { const g = document.createElement('em'); g.textContent = x.tag; b.appendChild(g); }
+    const t = document.createElement('b'); t.textContent = x.t;
+    const d = document.createElement('span'); d.textContent = x.d;
+    b.append(t, d); b.onclick = () => ask(x.t); el.appendChild(b);
+  });
+}
+function showRoom() {
+  $('welcome').style.display = 'none';
+  $('stage').style.display = 'grid';
+  renderSide($('svcList'), SERVICES); renderSide($('soonList'), SOON);
+  $('note').textContent = demo ? 'Preview: replies are simulated' : 'Private between you and me';
+  $('log').innerHTML = '<div class="day">Today</div>';
+  if (!hist.length) {
+    add('Hi ' + name + ', thanks for stopping by.', 'them');
+    add("Send me a message and I'll reply here.", 'them');
+  } else hist.forEach(h => draw(h.text, h.who, h.ts));
+  $('chips').style.display = hist.some(h => h.who === 'me') ? 'none' : 'flex';
   if (!demo) { poll(); pollTimer = setInterval(poll, 4000); }
+  $('text').focus();
 }
-
-/* Change username: go back to the first step */
-function backToGate() {
-  const old = name || '';
+function showWelcome(prefill) {
   clearInterval(pollTimer); pollTimer = null;
-  del('cj_name'); del('cj_sid'); del('cj_seen');
-  name = null; sid = null; seen = new Set();
-  $('log').innerHTML = '';
-  $('text').value = '';
-  $('gname').value = old;          // old name pre-filled so it can be edited
-  $('gerr').textContent = '';
-  $('site').style.display = 'none';
-  $('gate').style.display = 'flex';
-  window.scrollTo(0, 0);
-  $('gname').focus(); $('gname').select();
+  $('stage').style.display = 'none';
+  $('welcome').style.display = 'block';
+  $('wname').value = prefill || ''; $('werr').textContent = '';
+  $('wname').focus(); $('wname').select();
 }
-$('change').onclick = backToGate;
 
-/* Step 1: submit username */
-function submitName() {
-  const n = $('gname').value.trim();
-  if (!n) { $('gerr').textContent = 'Please enter a name first'; return; }
-  name = n; sid = sid || rand();
-  set('cj_name', name); set('cj_sid', sid);
-  enterSite();
+function start() {
+  const n = $('wname').value.trim();
+  if (!n) { $('werr').textContent = 'Please enter a name first'; return; }
+  name = n; sid = sid || rand(); set('cj_name', name); set('cj_sid', sid);
+  showRoom();
 }
-$('genter').onclick = submitName;
-$('gname').addEventListener('keydown', e => { if (e.key === 'Enter') submitName(); });
-$('gname').addEventListener('input', () => $('gerr').textContent = '');
+$('wgo').onclick = start;
+$('wname').addEventListener('keydown', e => { if (e.key === 'Enter') start(); });
+$('wname').addEventListener('input', () => $('werr').textContent = '');
 
-async function send() {
-  const t = $('text').value.trim(); if (!t) return;
-  $('text').value = ''; add(t, 'me');
-  if (demo) { const n = name; setTimeout(() => { if (name === n) add(`Thanks, ${n}. This is a simulated reply.`, 'them'); }, 1200); return; }
+$('change').onclick = () => {
+  const old = name;
+  del('cj_name'); del('cj_sid'); del('cj_seen'); del('cj_log');
+  name = null; sid = null; seen = new Set(); hist = [];
+  showWelcome(old);
+};
+
+async function send(text) {
+  const t = (text || $('text').value).trim(); if (!t) return;
+  $('text').value = ''; $('chips').style.display = 'none';
+  add(t, 'me');
+  if (demo) {
+    const n = name; typing(true);
+    setTimeout(() => { if (name !== n) return; typing(false); add('Thanks, ' + n + '. This is a simulated reply.', 'them'); }, 1800);
+    return;
+  }
   try {
     const r = await fetch(API + '/api/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sid, name, text: t }) });
     if (!r.ok) throw new Error();
-  } catch (e) { add('Message failed to send. Try again.', 'them'); }
+  } catch (e) { add('Message failed to send. Please try again.', 'them'); }
 }
-$('send').onclick = send;
+$('send').onclick = () => send();
 $('text').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+$('chips').querySelectorAll('button').forEach(b => b.onclick = () => send(b.textContent));
 
 async function poll() {
   if (document.hidden || !sid) return;
   try {
-    const r = await fetch(`${API}/api/poll?sid=${sid}`, { cache: 'no-store' });
+    const r = await fetch(API + '/api/poll?sid=' + sid, { cache: 'no-store' });
     const { replies } = await r.json();
     for (const m of replies) { if (seen.has(m.id)) continue; seen.add(m.id); add(m.text, 'them'); }
     set('cj_seen', JSON.stringify([...seen]));
   } catch (e) {}
 }
 
-if (sid && name) enterSite(); else $('gname').focus();
+/* Entry: known device goes straight to the chat, new device sees the username page */
+if (name && sid) showRoom(); else showWelcome('');
 </script>
 </body>
 </html>
