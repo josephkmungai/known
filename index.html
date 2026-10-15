@@ -5,70 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chat with CyberJay</title>
 <style>
-:root{--bg:#0b0f14;--card:#121820;--line:#1f2a37;--tx:#e6edf3;--mut:#8b98a7;--ac:#00ff9c;--onac:#04110b;--bub:#1b2531}
-@media (prefers-color-scheme:light){:root{--bg:#eef2f6;--card:#fff;--line:#d8dee4;--tx:#1f2328;--mut:#59636e;--ac:#0a7d4f;--onac:#fff;--bub:#e9eef3}}
+:root{--font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--acD:#00ff9c;--acL:#0a7d4f;--h:min(82vh,640px);
+--bg:#0b0f14;--card:#121820;--line:#1f2a37;--tx:#e6edf3;--mut:#8b98a7;--ac:var(--acD);--onac:#04110b;--bub:#1b2531}
+@supports (height:1dvh){:root{--h:min(82dvh,640px)}}
+:root[data-theme="light"]{--bg:#eef2f6;--card:#fff;--line:#d8dee4;--tx:#1f2328;--mut:#59636e;--ac:var(--acL);--onac:#fff;--bub:#e9eef3}
+:root[data-accent="blue"]{--acD:#4da3ff;--acL:#0b63d1}
+:root[data-accent="purple"]{--acD:#b18cff;--acL:#6b3fd4}
+:root[data-accent="orange"]{--acD:#ffa24d;--acL:#b85a00}
+:root[data-accent="pink"]{--acD:#ff7ab8;--acL:#c4247a}
+:root[data-font="serif"]{--font:Georgia,"Times New Roman",Times,serif}
+:root[data-font="mono"]{--font:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+:root[data-font="round"]{--font:"Trebuchet MS","Segoe UI",Verdana,sans-serif}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,Segoe UI,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px;padding-top:max(16px,env(safe-area-inset-top));padding-bottom:max(16px,env(safe-area-inset-bottom))}
-button,input{font-family:inherit}
-.card{width:100%;max-width:460px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+html{font-size:13px;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);color:var(--tx);font-family:var(--font);line-height:1.45}
+button,input{font-family:inherit;font-size:inherit}
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:16px 14px;padding-top:max(16px,env(safe-area-inset-top));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+footer{text-align:center;color:var(--mut);font-size:.85rem;padding:14px 14px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.card{width:100%;max-width:440px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.gear{width:34px;height:34px;flex:none;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--tx);cursor:pointer;font-weight:600;font-size:.85rem}
+.gear:hover{border-color:var(--ac);color:var(--ac)}
 
 /* STEP 1: username */
-#welcome{padding:40px 28px;text-align:center}
-.av{width:64px;height:64px;border-radius:50%;background:var(--ac);color:var(--onac);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;margin:0 auto 18px;font-family:ui-monospace,Menlo,monospace}
-#welcome h1{font-size:22px;margin:0 0 6px;font-weight:600}
-#welcome p{margin:0 0 22px;color:var(--mut);font-size:14px}
-#welcome input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:15px;margin-bottom:12px;outline:none}
+#welcome{display:none;position:relative;padding:36px 24px;text-align:center}
+#welcome .gear{position:absolute;top:12px;right:12px}
+.av{width:56px;height:56px;border-radius:50%;background:var(--ac);color:var(--onac);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.4rem;margin:0 auto 16px;font-family:ui-monospace,Menlo,monospace}
+#welcome h1{font-size:1.5rem;margin:0 0 6px;font-weight:600}
+#welcome p{margin:0 0 20px;color:var(--mut)}
+#welcome input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--tx);margin-bottom:12px;outline:none}
 #welcome input:focus,.bar input:focus{border-color:var(--ac)}
-#welcome .go{width:100%;padding:13px;border:0;border-radius:10px;background:var(--ac);color:var(--onac);font-weight:600;font-size:15px;cursor:pointer}
-#werr{display:block;min-height:18px;margin-top:10px;font-size:13px;color:#ff7b7b}
+#welcome .go{width:100%;padding:12px;border:0;border-radius:10px;background:var(--ac);color:var(--onac);font-weight:600;cursor:pointer}
+#werr{display:block;min-height:18px;margin-top:10px;font-size:.9rem;color:#ff7b7b}
 
 /* STEP 2: services | chat | coming soon */
-#stage{display:none;width:100%;max-width:1040px;grid-template-columns:minmax(0,250px) minmax(0,460px) minmax(0,250px);gap:18px;justify-content:center;align-items:stretch}
-#room{display:flex;height:min(86vh,680px);flex-direction:column;max-width:none}
-.side{padding:18px 16px;display:flex;flex-direction:column;gap:10px;max-height:min(86vh,680px);overflow-y:auto}
-.side h2{margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);font-family:ui-monospace,Menlo,monospace;font-weight:500}
-.side .sub{margin:0 0 6px;font-size:12px;color:var(--mut)}
-.item{width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--tx);cursor:pointer}
+#stage{display:none;width:100%;max-width:960px;grid-template-columns:minmax(0,230px) minmax(0,440px) minmax(0,230px);gap:16px;justify-content:center;align-items:stretch}
+#room{display:flex;height:var(--h);min-height:420px;flex-direction:column;max-width:none}
+.side{padding:16px 14px;display:flex;flex-direction:column;gap:8px;max-height:var(--h);overflow-y:auto}
+.side h2{margin:0;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);font-family:ui-monospace,Menlo,monospace;font-weight:500}
+.side .sub{margin:0 0 4px;font-size:.85rem;color:var(--mut)}
+#svcList,#soonList{display:flex;flex-direction:column;gap:8px}
+.item{width:100%;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:var(--tx);cursor:pointer}
 .item:hover{border-color:var(--ac)}
-.item b{display:block;font-size:14px;margin-bottom:2px}
-.item span{font-size:12px;color:var(--mut);line-height:1.4;display:block}
-.item em{display:inline-block;font-style:normal;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--onac);background:var(--ac);border-radius:99px;padding:2px 8px;margin-bottom:6px}
-.empty{font-size:13px;color:var(--mut);padding:8px 2px}
-@media (max-width:1020px){#stage{grid-template-columns:minmax(0,460px)}#room{order:1}#svc{order:2}#soon{order:3}.side{max-height:none}}
-.top{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
-.top .av{width:42px;height:42px;font-size:15px;margin:0;position:relative;flex:none}
-.top .av::after{content:"";position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;background:#2ecc71;border:2px solid var(--card)}
+.item b{display:block;font-size:1rem;margin-bottom:2px}
+.item span{font-size:.85rem;color:var(--mut);line-height:1.4;display:block}
+.item em{display:inline-block;font-style:normal;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--onac);background:var(--ac);border-radius:99px;padding:2px 8px;margin-bottom:6px}
+.empty{font-size:.95rem;color:var(--mut);padding:6px 2px}
+@media (max-width:980px){#stage{grid-template-columns:1fr 1fr;max-width:620px}#room{grid-column:1/-1;order:-1}.side{max-height:none}}
+@media (max-width:560px){#stage{grid-template-columns:1fr}main{padding:10px 8px}#room{height:min(80vh,640px)}}
+
+.top{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.top .av{width:38px;height:38px;font-size:1rem;margin:0;position:relative;flex:none}
+.top .av::after{content:"";position:absolute;right:0;bottom:0;width:10px;height:10px;border-radius:50%;background:#2ecc71;border:2px solid var(--card)}
 .who{flex:1;min-width:0}
-.who b{display:block;font-size:15px}
-.who span{font-size:12px;color:var(--mut)}
-.back{display:flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--tx);font-size:13px;text-decoration:none;white-space:nowrap}
+.who b{display:block;font-size:1.08rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who span{font-size:.85rem;color:var(--mut);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back{display:flex;align-items:center;gap:5px;padding:7px 11px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--tx);font-size:.9rem;text-decoration:none;white-space:nowrap}
 .back:hover{border-color:var(--ac);color:var(--ac)}
-#log{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth}
-.day{align-self:center;font-size:11px;color:var(--mut);margin:2px 0 8px;text-transform:uppercase;letter-spacing:.08em}
-.row{display:flex;flex-direction:column;max-width:82%}
+@media (max-width:400px){.back span{display:none}.back{padding:8px}}
+#log{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:4px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.day{align-self:center;font-size:.72rem;color:var(--mut);margin:0 0 8px;text-transform:uppercase;letter-spacing:.08em}
+.row{display:flex;flex-direction:column;max-width:84%}
 .row.me{align-self:flex-end;align-items:flex-end}.row.them{align-self:flex-start;align-items:flex-start}
-.m{padding:9px 13px;font-size:14px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere}
-.me .m{background:var(--ac);color:var(--onac);border-radius:16px 16px 4px 16px}
-.them .m{background:var(--bub);border-radius:16px 16px 16px 4px}
-.ts{font-size:10px;color:var(--mut);margin:3px 4px 6px}
-.typing{display:flex;gap:4px;padding:12px 14px;background:var(--bub);border-radius:16px 16px 16px 4px;width:fit-content}
+.m{padding:8px 12px;font-size:1rem;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:anywhere}
+.me .m{background:var(--ac);color:var(--onac);border-radius:14px 14px 4px 14px}
+.them .m{background:var(--bub);border-radius:14px 14px 14px 4px}
+.ts{font-size:.72rem;color:var(--mut);margin:3px 4px 6px}
+.typing{display:flex;gap:4px;padding:11px 13px;background:var(--bub);border-radius:14px 14px 14px 4px;width:fit-content}
 .typing i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:b 1.2s infinite}
 .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
 @keyframes b{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
-.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 10px}
-.chips button{padding:7px 13px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--tx);font-size:13px;cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 8px}
+.chips button{padding:6px 12px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--tx);font-size:.9rem;cursor:pointer}
 .chips button:hover{border-color:var(--ac);color:var(--ac)}
-.bar{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid var(--line)}
-.bar input{flex:1;min-width:0;padding:12px 16px;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--tx);font-size:14px;outline:none}
-.send{width:42px;height:42px;flex:none;border:0;border-radius:50%;background:var(--ac);color:var(--onac);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.foot{display:flex;justify-content:space-between;padding:0 16px 12px;font-size:12px;color:var(--mut)}
-.foot button{border:0;background:transparent;color:var(--mut);font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
+.bar{display:flex;align-items:center;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.bar input{flex:1;min-width:0;padding:11px 15px;border-radius:99px;border:1px solid var(--line);background:var(--bg);color:var(--tx);outline:none}
+.send{width:40px;height:40px;flex:none;border:0;border-radius:50%;background:var(--ac);color:var(--onac);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.foot{display:flex;justify-content:space-between;gap:8px;padding:0 14px 10px;font-size:.85rem;color:var(--mut)}
+.foot button{border:0;background:transparent;color:var(--mut);cursor:pointer;text-decoration:underline;padding:0;font-size:inherit}
+@media (pointer:coarse){input{font-size:16px!important}}
+
+/* Appearance panel */
+.ovl{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.ovl[hidden]{display:none}
+.sheet{max-width:340px;padding:18px;max-height:92vh;overflow-y:auto}
+.sheet .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.sheet .hd b{font-size:1.15rem}
+.sheet .hd button{border:0;background:transparent;color:var(--mut);font-size:1.5rem;line-height:1;cursor:pointer}
+.sheet h3{margin:14px 0 8px;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:500}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button{padding:8px 13px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--tx);cursor:pointer}
+.opts button.on{border-color:var(--ac);color:var(--ac);box-shadow:inset 0 0 0 1px var(--ac)}
+.opts .sw{width:34px;height:34px;padding:0;border-radius:50%}
+.sw[data-accent="green"]{background:#00d884}.sw[data-accent="blue"]{background:#3b8eea}.sw[data-accent="purple"]{background:#8b5cf6}.sw[data-accent="orange"]{background:#f59e0b}.sw[data-accent="pink"]{background:#ec4899}
+.opts .sw.on{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--ac)}
 </style>
 </head>
 <body>
+<main>
 
 <!-- STEP 1: username page -->
 <div class="card" id="welcome">
+  <button class="gear" data-open aria-label="Appearance">Aa</button>
   <div class="av">CJ</div>
   <h1>Hi, who's this?</h1>
   <p>Enter your name to start chatting with Joseph.</p>
@@ -79,43 +117,67 @@ button,input{font-family:inherit}
 
 <!-- STEP 2: services | chat | coming soon -->
 <div id="stage">
+  <aside class="card side" id="svc">
+    <h2>Services</h2>
+    <p class="sub">Tap one to ask about it in the chat.</p>
+    <div id="svcList"></div>
+  </aside>
 
-<aside class="card side" id="svc">
-  <h2>Services</h2>
-  <p class="sub">Tap one to ask about it in the chat.</p>
-  <div id="svcList"></div>
-</aside>
+  <div class="card" id="room">
+    <div class="top">
+      <div class="av">CJ</div>
+      <div class="who"><b>CyberJay</b><span>Online · usually replies within a day</span></div>
+      <button class="gear" data-open aria-label="Appearance">Aa</button>
+      <a class="back" id="back" href="/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span>Main site</span></a>
+    </div>
+    <div id="log"></div>
+    <div class="chips" id="chips">
+      <button>Job opportunity</button><button>Collaboration</button><button>Network services for my business</button>
+    </div>
+    <div class="bar">
+      <input id="text" maxlength="1000" placeholder="Type a message..." autocomplete="off">
+      <button class="send" id="send" aria-label="Send"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg></button>
+    </div>
+    <div class="foot"><span id="note"></span><button id="change">Not you? Change name</button></div>
+  </div>
 
-<div class="card" id="room">
-  <div class="top">
-    <div class="av">CJ</div>
-    <div class="who"><b>CyberJay</b><span>Online · usually replies within a day</span></div>
-    <a class="back" id="back" href="/"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Main site</a>
-  </div>
-  <div id="log"></div>
-  <div class="chips" id="chips">
-    <button>Job opportunity</button><button>Collaboration</button><button>Network services for my business</button>
-  </div>
-  <div class="bar">
-    <input id="text" maxlength="1000" placeholder="Type a message..." autocomplete="off">
-    <button class="send" id="send" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg></button>
-  </div>
-  <div class="foot"><span id="note"></span><button id="change">Not you? Change name</button></div>
+  <aside class="card side" id="soon">
+    <h2>Coming soon</h2>
+    <p class="sub">What I'm working on next.</p>
+    <div id="soonList"></div>
+  </aside>
 </div>
 
-<aside class="card side" id="soon">
-  <h2>Coming soon</h2>
-  <p class="sub">What I'm working on next.</p>
-  <div id="soonList"></div>
-</aside>
+</main>
 
+<footer>&copy; <span id="yr">2026</span> CyberJay. All rights reserved.</footer>
+
+<!-- Appearance panel -->
+<div class="ovl" id="settings" hidden>
+  <div class="card sheet" role="dialog" aria-label="Appearance">
+    <div class="hd"><b>Appearance</b><button id="sclose" aria-label="Close">&times;</button></div>
+    <h3>Mode</h3>
+    <div class="opts"><button data-mode="auto">Auto</button><button data-mode="light">Light</button><button data-mode="dark">Dark</button></div>
+    <h3>Chat color</h3>
+    <div class="opts">
+      <button class="sw" data-accent="green" aria-label="Green"></button><button class="sw" data-accent="blue" aria-label="Blue"></button><button class="sw" data-accent="purple" aria-label="Purple"></button><button class="sw" data-accent="orange" aria-label="Orange"></button><button class="sw" data-accent="pink" aria-label="Pink"></button>
+    </div>
+    <h3>Font style</h3>
+    <div class="opts">
+      <button data-font="system" style="font-family:system-ui,sans-serif">Clean</button>
+      <button data-font="serif" style="font-family:Georgia,serif">Classic</button>
+      <button data-font="mono" style="font-family:ui-monospace,Menlo,monospace">Code</button>
+      <button data-font="round" style="font-family:'Trebuchet MS',Verdana,sans-serif">Friendly</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const API = null;        // set to '' or 'https://your-app.vercel.app' once /api/send and /api/poll are deployed
+/* ================= SETTINGS ================= */
+const API = null;        // null = preview (fake replies). Live: '' (same domain) or 'https://your-app.vercel.app'
 const MAIN_SITE = '/';   // your main site address, e.g. 'https://yoursite.com'
 
-/* ---- EDIT THESE: left panel (services) and right panel (coming soon) ---- */
+/* Left panel (services) and right panel (coming soon). Edit freely. */
 const SERVICES = [
   { t: 'Network setup', d: 'Routers, switches and Wi-Fi configured for small offices.' },
   { t: 'Network security', d: 'Firewall setup and basic hardening for small businesses.' },
@@ -126,11 +188,12 @@ const SOON = [
   { tag: 'Soon', t: 'Managed network packages', d: 'Monitoring and support plans for Kenyan SMEs.' },
   { tag: 'Next', t: 'Lab write-ups', d: 'Step-by-step notes from my enterprise network lab builds.' }
 ];  // set SOON = [] to show "Nothing new right now"
-/* ------------------------------------------------------------------------ */
+/* ============================================ */
 
 const $ = id => document.getElementById(id);
 const demo = API === null;
 $('back').href = MAIN_SITE;
+$('yr').textContent = new Date().getFullYear();
 
 let store = null;
 try { store = window.localStorage; store.getItem('x'); } catch (e) { store = null; }
@@ -139,10 +202,37 @@ const set = (k, v) => { try { store && store.setItem(k, v); } catch (e) {} };
 const del = k => { try { store && store.removeItem(k); } catch (e) {} };
 const rand = () => Array.from(crypto.getRandomValues(new Uint8Array(6))).map(b => b.toString(16).padStart(2, '0')).join('');
 
+/* ---------- Appearance (saved per device) ---------- */
+let prefs = { mode: 'auto', accent: 'green', font: 'system' };
+try { Object.assign(prefs, JSON.parse(get('cj_prefs') || '{}')); } catch (e) {}
+const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+function applyPrefs() {
+  const r = document.documentElement;
+  const light = prefs.mode === 'light' || (prefs.mode === 'auto' && mq && mq.matches);
+  r.dataset.theme = light ? 'light' : 'dark';
+  r.dataset.accent = prefs.accent; r.dataset.font = prefs.font;
+  document.querySelectorAll('#settings [data-mode]').forEach(b => b.classList.toggle('on', b.dataset.mode === prefs.mode));
+  document.querySelectorAll('#settings [data-accent]').forEach(b => b.classList.toggle('on', b.dataset.accent === prefs.accent));
+  document.querySelectorAll('#settings [data-font]').forEach(b => b.classList.toggle('on', b.dataset.font === prefs.font));
+}
+if (mq && mq.addEventListener) mq.addEventListener('change', applyPrefs);
+applyPrefs();
+$('settings').addEventListener('click', e => {
+  if (e.target === $('settings')) { $('settings').hidden = true; return; }
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.mode) prefs.mode = b.dataset.mode;
+  if (b.dataset.accent) prefs.accent = b.dataset.accent;
+  if (b.dataset.font) prefs.font = b.dataset.font;
+  set('cj_prefs', JSON.stringify(prefs)); applyPrefs();
+});
+$('sclose').onclick = () => { $('settings').hidden = true; };
+document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { $('settings').hidden = false; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('settings').hidden = true; });
+
+/* ---------- Chat state ---------- */
 let name = get('cj_name'), sid = get('cj_sid'), pollTimer = null;
 let seen = new Set(); try { seen = new Set(JSON.parse(get('cj_seen') || '[]')); } catch (e) {}
 let hist = []; try { hist = JSON.parse(get('cj_log') || '[]'); } catch (e) {}
-
 const time = ts => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 function draw(text, who, ts) {
@@ -164,7 +254,6 @@ function typing(on) {
   d.innerHTML = '<i></i><i></i><i></i>';
   $('log').appendChild(d); $('log').scrollTop = $('log').scrollHeight;
 }
-
 function ask(title) {
   $('text').value = "Hi, I'd like to know more about: " + title;
   $('text').focus();
@@ -180,6 +269,7 @@ function renderSide(el, list) {
     b.append(t, d); b.onclick = () => ask(x.t); el.appendChild(b);
   });
 }
+
 function showRoom() {
   $('welcome').style.display = 'none';
   $('stage').style.display = 'grid';
@@ -201,7 +291,6 @@ function showWelcome(prefill) {
   $('wname').value = prefill || ''; $('werr').textContent = '';
   $('wname').focus(); $('wname').select();
 }
-
 function start() {
   const n = $('wname').value.trim();
   if (!n) { $('werr').textContent = 'Please enter a name first'; return; }
@@ -211,7 +300,6 @@ function start() {
 $('wgo').onclick = start;
 $('wname').addEventListener('keydown', e => { if (e.key === 'Enter') start(); });
 $('wname').addEventListener('input', () => $('werr').textContent = '');
-
 $('change').onclick = () => {
   const old = name;
   del('cj_name'); del('cj_sid'); del('cj_seen'); del('cj_log');
@@ -247,7 +335,7 @@ async function poll() {
   } catch (e) {}
 }
 
-/* Entry: known device goes straight to the chat, new device sees the username page */
+/* Known device goes straight to the chat; new device sees the username page */
 if (name && sid) showRoom(); else showWelcome('');
 </script>
 </body>
